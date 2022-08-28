@@ -1,0 +1,18 @@
+spring:
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${RDS_HOSTNAME:localhost}:${RDS_PORT:5434}/${RDS_DB_NAME:users}?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: ${RDS_USERNAME:otus}
+    password: ${RDS_PASSWORD:12345}
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+    hibernate:
+      ddl-auto: none
+
+security:
+  salt: 64ed690a-269d-11ed-a261-0242ac120002
