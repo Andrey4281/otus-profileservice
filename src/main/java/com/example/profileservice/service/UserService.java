@@ -2,11 +2,11 @@ package com.example.profileservice.service;
 
 import com.example.profileservice.domain.User;
 import com.example.profileservice.dto.UserDto;
+import com.example.profileservice.dto.UserLoginDto;
 import com.example.profileservice.exceptions.DuplicateUserException;
 import com.example.profileservice.exceptions.NotFoundUserException;
 import com.example.profileservice.mapper.UserRowMapper;
 import com.example.profileservice.repository.UserRepository;
-import com.example.profileservice.service.util.SecurityUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,30 +18,36 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserRowMapper userRowMapper;
-    private final SecurityUtil securityUtil;
+    private WebClientService webClientService;
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
     public void insert(UserDto userDto) {
         if (!userRepository.existsByLogin(userDto.getLogin())) {
             User user = userRowMapper.toEntity(userDto);
-            user.setPassword(securityUtil.getSecuredPassword(user.getPassword()));
             if (user.getId() != null) {
                 throw new IllegalArgumentException("You shouldn't pass id for new user");
             }
             userRepository.save(user);
+            webClientService.createCredentials(UserLoginDto.builder()
+                    .login(userDto.getLogin())
+                    .password(userDto.getPassword())
+                    .build());
         } else {
             throw new DuplicateUserException("User with login=%s already exists ");
         }
     }
 
-    @Transactional(readOnly = false)
-    public void update(UserDto userDto, String login) {
-        if (userRepository.existsByLogin(login)) {
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    public void update(UserDto userDto, String oldLogin) {
+        if (userRepository.existsByLogin(oldLogin)) {
             User user = userRowMapper.toEntity(userDto);
-            user.setPassword(securityUtil.getSecuredPassword(user.getPassword()));
             userRepository.save(user);
+            webClientService.updateCredentials(UserLoginDto.builder()
+                    .login(userDto.getLogin())
+                    .password(userDto.getPassword())
+                    .build(), oldLogin);
         } else {
-            throw new NotFoundUserException(String.format("User with login=%s not found in database for update", login));
+            throw new NotFoundUserException(String.format("User with login=%s not found in database for update", oldLogin));
         }
     }
 

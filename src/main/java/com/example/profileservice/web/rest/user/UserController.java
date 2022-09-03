@@ -25,8 +25,8 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "users/{login}")
-    public ResponseEntity<UserDto> getByLogin(@PathVariable String login) {
-        return ResponseEntity.ok(userService.findByLogin(login));
+    @GetMapping(value = "users/{oldLogin}")
+    public ResponseEntity<UserDto> getByLogin(@PathVariable String oldLogin) {
+        return ResponseEntity.ok(userService.findByLogin(oldLogin));
     }
 }

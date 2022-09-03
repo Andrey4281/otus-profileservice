@@ -24,9 +24,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="phone" type="varchar(255)"/>
-            <column name="password" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
     </changeSet>
 

@@ -1,5 +1,6 @@
 package com.example.profileservice.web.errorHandler;
 
+import com.example.profileservice.exceptions.DuplicateUserException;
 import com.example.profileservice.exceptions.NotFoundUserException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,10 +15,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value
             = {NotFoundUserException.class})
-    protected ResponseEntity<Object> handleConflict(
+    protected ResponseEntity<Object> handleUserNotFoundError(
             RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "User not found";
-        return handleExceptionInternal(ex, bodyOfResponse,
+        String responseBody = "User not found";
+        return handleExceptionInternal(ex, responseBody,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(value = {DuplicateUserException.class})
+    protected ResponseEntity<Object> handleUserDuplicateError(
+            RuntimeException ex, WebRequest request) {
+        String responseBody = "Duplication user by Login";
+        return handleExceptionInternal(ex, responseBody, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 }

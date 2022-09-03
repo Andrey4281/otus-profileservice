@@ -26,7 +26,6 @@ public class UserRowMapper {
                 .lastName(userDto.getLastName())
                 .email(userDto.getEmail())
                 .phone(userDto.getPhone())
-                .password(userDto.getPassword())
                 .build();
     }
 }
