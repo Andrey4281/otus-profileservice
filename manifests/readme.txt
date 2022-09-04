@@ -16,3 +16,4 @@ kubectl --namespace backend port-forward svc/auth-service 7001:7001
 9) kubectl apply -f backend-services-config.yaml
 10) kubectl apply -f profileservice-deployment.yaml
 11) kubectl apply -f authservice-deployment.yaml
+12) kubectl apply -f gateway-deployment.yaml

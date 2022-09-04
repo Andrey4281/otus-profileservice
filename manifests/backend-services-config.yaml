@@ -40,6 +40,7 @@ data:
     2wIDAQAB
     -----END PUBLIC KEY-----
   auth-service-url: "http://auth-service.backend.svc.cluster.local:7001"
+  profile-service-url: "http://profile-service.backend.svc.cluster.local:7000"
 kind: ConfigMap
 metadata:
   name: services-config
