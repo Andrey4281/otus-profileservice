@@ -2,7 +2,7 @@
 1) minikube start --cpus=4 --memory=12g --cni=flannel --kubernetes-version="v1.19.0"
 kubectl --namespace postgres port-forward svc/otus-postgresql 5434:5432
 kubectl --namespace backend port-forward svc/profile-service 7000:7000
-
+kubectl --namespace backend port-forward svc/auth-service 7001:7001
 
 Установка postgres (в папке проекта manifests необходимо выполнить следующие инструкции):
 1) kubectl apply -f postgres-namespace.yaml
