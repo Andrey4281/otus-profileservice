@@ -1,5 +1,6 @@
 package com.example.profileservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,5 +16,6 @@ public class UserDto {
     private String lastName;
     private String email;
     private String phone;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
 }

@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile-service
+  namespace: backend
+  labels:
+    app: profile
+spec:
+  type: ClusterIP
+  ports:
+    - port: 7000
+      name: profile
+      targetPort: 8000
+  selector:
+    app: profile
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile-deployment
+  namespace: backend
+  labels:
+    app: profile
+spec:
+  selector:
+    matchLabels:
+      app: profile
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: profile
+    spec:
+      containers:
+        - image: andrey4281/profileservice:0.0.3
+          name: profile
+          env:
+            - name: RDS_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: otus-app-config
+                  key: rds-host-name
+            - name: RDS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: otus-app-config
+                  key: rds-port
+            - name: RDS_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: otus-app-config
+                  key: rds-db-profile-name
+            - name: RDS_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: otus-app-config
+                  key: rds-user-name
+            - name: RDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: otus-app-secrets
+                  key: psqluserpass
+            - name: AUTH_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: services-config
+                  key: auth-service-url
+          ports:
+            - containerPort: 8000
+          imagePullPolicy: IfNotPresent
