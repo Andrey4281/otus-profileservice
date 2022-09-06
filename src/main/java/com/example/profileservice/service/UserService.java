@@ -42,10 +42,12 @@ public class UserService {
         if (userRepository.existsByLogin(oldLogin)) {
             User user = userRowMapper.toEntity(userDto);
             userRepository.save(user);
-            webClientService.updateCredentials(UserLoginDto.builder()
-                    .login(userDto.getLogin())
-                    .password(userDto.getPassword())
-                    .build(), oldLogin);
+            if (userDto.getPassword() != null) {
+                webClientService.updateCredentials(UserLoginDto.builder()
+                        .login(userDto.getLogin())
+                        .password(userDto.getPassword())
+                        .build(), oldLogin);
+            }
         } else {
             throw new NotFoundUserException(String.format("User with login=%s not found in database for update", oldLogin));
         }
