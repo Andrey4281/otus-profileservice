@@ -42,7 +42,7 @@ public class UserService {
         if (userRepository.existsByLogin(oldLogin)) {
             User user = userRowMapper.toEntity(userDto);
             userRepository.save(user);
-            if (userDto.getPassword() != null) {
+            if (userDto.getPassword() != null || !oldLogin.equals(userDto.getLogin())) {
                 webClientService.updateCredentials(UserLoginDto.builder()
                         .login(userDto.getLogin())
                         .password(userDto.getPassword())
