@@ -3,6 +3,7 @@ package com.example.profileservice.service;
 import com.example.profileservice.domain.User;
 import com.example.profileservice.dto.UserDto;
 import com.example.profileservice.dto.UserLoginDto;
+import com.example.profileservice.dto.UserSignUpResultDto;
 import com.example.profileservice.exceptions.DuplicateUserException;
 import com.example.profileservice.exceptions.NotFoundUserException;
 import com.example.profileservice.mapper.UserRowMapper;
@@ -21,17 +22,21 @@ public class UserService {
     private WebClientService webClientService;
 
     @Transactional(readOnly = false, rollbackFor = Exception.class)
-    public void insert(UserDto userDto) {
+    public UserSignUpResultDto insert(UserDto userDto) {
         if (!userRepository.existsByLogin(userDto.getLogin())) {
             User user = userRowMapper.toEntity(userDto);
             if (user.getId() != null) {
                 throw new IllegalArgumentException("You shouldn't pass id for new user");
             }
-            userRepository.save(user);
+            User saved = userRepository.save(user);
             webClientService.createCredentials(UserLoginDto.builder()
                     .login(userDto.getLogin())
                     .password(userDto.getPassword())
                     .build());
+            return UserSignUpResultDto.builder()
+                    .id(saved.getId())
+                    .isSuccess(true)
+                    .build();
         } else {
             throw new DuplicateUserException("User with login=%s already exists ");
         }

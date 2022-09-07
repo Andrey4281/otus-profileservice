@@ -1,0 +1,417 @@
+{
+	"info": {
+		"_postman_id": "8de4b31e-8b7d-4b21-81ac-451a78660410",
+		"name": "otus",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10312710"
+	},
+	"item": [
+		{
+			"name": "gateway",
+			"item": [
+				{
+					"name": "signUpFirstUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"userId\", jsonData.id);",
+									"",
+									"pm.test(\"Sign up fist user status is 200\", function () {",
+									"    pm.response.to.be.ok;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"firstUser\",\n    \"firstName\": \"firstUser\",\n    \"lastName\": \"firstUser\",\n    \"email\": \"firstUser@yandex.ru\",\n    \"phone\": \"89001999487\",\n    \"password\": \"473292\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://arch.homework:7002/signUp",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"port": "7002",
+							"path": [
+								"signUp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editFistUserBeforeLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Edit fist user befor login status is 401\", function () {",
+									"    pm.response.to.be.unauthorized;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"login\": \"firstUser\",\n    \"firstName\": \"firstUser\",\n    \"lastName\": \"firstUser\",\n    \"email\": \"firstUser@gmail.ru\",\n    \"phone\": \"89826708164\",\n    \"password\": \"473292\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://arch.homework:7002/users/update/firstUser",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"port": "7002",
+							"path": [
+								"users",
+								"update",
+								"firstUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "loginFistUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"token\", jsonData.token);",
+									"",
+									"pm.test(\"Aftewr login fisrt user status is 200\", function () {",
+									"    pm.response.to.be.ok;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"firstUser\",\n    \"password\": \"473292\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://arch.homework:7002/login",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"port": "7002",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editFirstUserAfterLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"After editing fist user status is 200\", function () {",
+									"    pm.response.to.be.ok;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{userId}},\n    \"login\": \"firstUser\",\n    \"firstName\": \"firstUser\",\n    \"lastName\": \"firstUser\",\n    \"email\": \"firstUser@gmail.ru\",\n    \"phone\": \"89826708164\",\n    \"password\": \"473292\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://arch.homework:7002/users/update/firstUser",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"port": "7002",
+							"path": [
+								"users",
+								"update",
+								"firstUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getFistUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"email of first user was changed\", function () {",
+									"    pm.expect(\"firstUser@gmail.ru\").to.equal(",
+									"        pm.response.json().email",
+									"    );",
+									"});",
+									"",
+									"pm.test(\"phone of first user was changed\", function () {",
+									"    pm.expect(\"89826708164\").to.equal(",
+									"        pm.response.json().phone",
+									"    );",
+									"});",
+									"",
+									"pm.test(\"After getting fist user status is 200\", function () {",
+									"    pm.response.to.be.ok;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://arch.homework:7002/users/firstUser",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"port": "7002",
+							"path": [
+								"users",
+								"firstUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SignUpSecondUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"secondUser\",\n    \"firstName\": \"secondUser\",\n    \"lastName\": \"secondUser\",\n    \"email\": \"secondUser@yandex.ru\",\n    \"phone\": \"89001999488\",\n    \"password\": \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://arch.homework:7002/signUp",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"port": "7002",
+							"path": [
+								"signUp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "loginSecondUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"token\", jsonData.token);",
+									"",
+									"pm.test(\"Aftewr login sesonc user status is 200\", function () {",
+									"    pm.response.to.be.ok;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"secondUser\",\n    \"password\": \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://arch.homework:7002/login",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"port": "7002",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editFistUserAfterSecondLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"First user is trying to edit fist user so status is 403\", function () {",
+									"    pm.response.to.be.forbidden;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{userId}},\n    \"login\": \"firstUser\",\n    \"firstName\": \"firstUser\",\n    \"lastName\": \"firstUser\",\n    \"email\": \"firstUser@yandex.ru\",\n    \"phone\": \"89826708164\",\n    \"password\": \"473292\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://arch.homework:7002/users/update/firstUser",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"port": "7002",
+							"path": [
+								"users",
+								"update",
+								"firstUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getFistUserAfterSecondLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"First user is trying to get fist user so status is 403\", function () {",
+									"    pm.response.to.be.forbidden;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://arch.homework:7002/users/firstUser",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"port": "7002",
+							"path": [
+								"users",
+								"firstUser"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

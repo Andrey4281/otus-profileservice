@@ -37,7 +37,7 @@ spec:
         app: profile
     spec:
       containers:
-        - image: andrey4281/profileservice:0.0.3
+        - image: andrey4281/profileservice:0.0.4
           name: profile
           env:
             - name: RDS_HOSTNAME

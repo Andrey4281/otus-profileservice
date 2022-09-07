@@ -1,6 +1,7 @@
 package com.example.profileservice.web.rest.user;
 
 import com.example.profileservice.dto.UserDto;
+import com.example.profileservice.dto.UserSignUpResultDto;
 import com.example.profileservice.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(value = "users/signUp")
-    public ResponseEntity<Void> insert(@RequestBody UserDto userDto) {
-        userService.insert(userDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserSignUpResultDto> insert(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.insert(userDto));
     }
 
     @PutMapping(value = "users/update/{login}")
